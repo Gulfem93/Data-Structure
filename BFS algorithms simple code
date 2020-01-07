@@ -1,0 +1,124 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define N 6
+bool ziyaret[N];
+int dizi[N][N] = {{0, 1, 1, 0, 0, 0},
+                  {1, 0, 0, 1, 0, 0},
+                  {1, 0, 0, 1, 0, 0},
+                  {0, 1, 1, 0, 1, 0},
+                  {0, 0, 0, 1, 0, 1},
+                  {0, 0, 0, 0, 1, 0}};
+
+typedef struct Node
+{
+	int data;
+	Node *next;
+};
+
+Node *first = NULL;
+Node *last = NULL;
+
+Node *DugumOlustur(int x)
+{
+	Node *newNode = (Node*)malloc(sizeof(Node));
+	newNode->data = x;
+	newNode->next = NULL;
+	return newNode;
+}
+
+void Enqueue(int x)
+{
+	Node *yeniDugum = DugumOlustur(x);
+	
+	if(first == NULL)
+	{
+		first = yeniDugum;
+		last = yeniDugum;
+	}
+	else
+	{
+		last->next = yeniDugum;
+		last = yeniDugum;
+	}
+}
+
+void Dengueue()
+{
+	if(first == NULL)
+	{
+		return;
+	}
+	if(first->next == NULL)
+	{
+		first = NULL;
+		last = NULL;
+	}
+	else
+	{
+		Node *gecici = first->next;
+		free(first);
+		first = gecici;
+	}
+}
+
+bool bosMu()
+{
+	if(first == NULL)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void BFS(int root)
+
+{
+	int i;
+	for(i = 0; i < N; i++)
+	{
+		ziyaret[i] = false;
+	}
+	ziyaret[root] = true;
+	Enqueue(root);
+	
+	while(bosMu() == false)
+	{
+		root = first->data;
+		printf("%d" , root);
+		Dengueue();
+		
+		for(int i=0; i<N; i++)
+		{
+			if(ziyaret[i] == false && dizi[root][i] == 1)
+			{
+				ziyaret[i] = true;
+				Enqueue(i);
+			}
+		}
+	}
+}
+
+
+
+int main()
+{
+	
+	
+	for(int i=0; i<6; i++)
+	{
+		for(int j=0; j<6; j++)
+		{
+			printf("%d", dizi[i][j]);
+		}
+		printf("\n");
+	}
+	
+	printf("\n");
+	BFS(2);
+	
+	return 0;
+}
