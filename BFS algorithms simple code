@@ -2,123 +2,111 @@
 #include<stdlib.h>
 
 #define N 6
-bool ziyaret[N];
+
+bool visited[N];
+
 int dizi[N][N] = {{0, 1, 1, 0, 0, 0},
-                  {1, 0, 0, 1, 0, 0},
-                  {1, 0, 0, 1, 0, 0},
-                  {0, 1, 1, 0, 1, 0},
-                  {0, 0, 0, 1, 0, 1},
-                  {0, 0, 0, 0, 1, 0}};
+				  {1, 0, 0, 1, 0, 0},
+				  {1, 0, 0, 1, 0, 0},
+				  {0, 1, 1, 0, 1, 0},
+				  {0, 0, 0, 1, 0, 1},
+				  {0, 0, 0, 0, 1, 0}};
 
 typedef struct Node
 {
-	int data;
+	int sayi;
 	Node *next;
 };
 
 Node *first = NULL;
 Node *last = NULL;
 
-Node *DugumOlustur(int x)
+Node *create(int x)
 {
 	Node *newNode = (Node*)malloc(sizeof(Node));
-	newNode->data = x;
+	newNode->sayi = x;
 	newNode->next = NULL;
 	return newNode;
 }
 
 void Enqueue(int x)
 {
-	Node *yeniDugum = DugumOlustur(x);
+	Node *gecici = create(x);
 	
 	if(first == NULL)
 	{
-		first = yeniDugum;
-		last = yeniDugum;
+		first = gecici;
+		last = gecici;
 	}
 	else
 	{
-		last->next = yeniDugum;
-		last = yeniDugum;
+		last->next = gecici;
+		last = gecici;
 	}
 }
 
-void Dengueue()
+void Denqueue()
 {
+	Node *gecici;
 	if(first == NULL)
 	{
 		return;
 	}
-	if(first->next == NULL)
+	else if(first->next == NULL)
 	{
 		first = NULL;
 		last = NULL;
 	}
 	else
 	{
-		Node *gecici = first->next;
+		gecici = first->next; 
 		free(first);
 		first = gecici;
 	}
 }
 
-bool bosMu()
-{
-	if(first == NULL)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
 void BFS(int root)
-
 {
-	int i;
-	for(i = 0; i < N; i++)
-	{
-		ziyaret[i] = false;
-	}
-	ziyaret[root] = true;
+	/*visited[root] = true  -->  ilk eleman eklendi
+	  Enqueue(root)         --> ilk eleman stacka eklendi
+	*/
+	visited[root] = true;
 	Enqueue(root);
 	
-	while(bosMu() == false)
+	while(first != false)
 	{
-		root = first->data;
-		printf("%d" , root);
-		Dengueue();
+		root = first->sayi;	
+		printf("%d ", root);
+		Denqueue();
+		/*
+			|   | denqueue |   |		--> ör: enque(2) stack eklendi
+			|   | -------> |   |				denqueue() stackden çıkarıldı
+			|_2_|	       |___|
+		*/
 		
 		for(int i=0; i<N; i++)
 		{
-			if(ziyaret[i] == false && dizi[root][i] == 1)
+			/* visited[i] == false  --> hiçbir yeri ziyaret etmediyse
+			   dizi[root][i] == 1   --> Komşuları var ise
+			*/
+			if(visited[i] == false && dizi[root][i] == 1)
 			{
-				ziyaret[i] = true;
+				visited[i] = true;
 				Enqueue(i);
 			}
 		}
 	}
+	
 }
-
-
 
 int main()
 {
-	
-	
-	for(int i=0; i<6; i++)
+	for(int i = 0; i < N; i++)
 	{
-		for(int j=0; j<6; j++)
-		{
-			printf("%d", dizi[i][j]);
-		}
-		printf("\n");
+		visited[i] = false;
 	}
 	
-	printf("\n");
-	BFS(2);
-	
+	printf(" BFS = ");
+	BFS(3);
 	return 0;
 }
