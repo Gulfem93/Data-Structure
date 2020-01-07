@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define N 6
+bool visited[N];
+
+int dizi[N][N] = {{0, 1, 1, 0, 0, 0},
+				  {1, 0, 0, 1, 0, 0},
+				  {1, 0, 0, 1, 0, 0},
+				  {0, 1, 1, 0, 1, 0},
+				  {0, 0, 0, 1, 0, 1},
+				  {0, 0, 0, 0, 1, 0}};
+
+void DFS(int root, bool visited[])
+{
+	// visited[root] = true  --> rootu ziyaret ettim olarak işaratle
+	visited[root] = true;
+	// printf("%d ", root) --> ziyaret ettiğim rootu yazdır
+	printf("%d ", root);
+	
+	// ziyaret etmediğim komşuları var mı diye bakılır
+	for(int i=0; i<N; i++)
+	{
+		/* visited[i] == false  --> hiçbir yeri ziyaret etmediyse
+		   dizi[root][i] == 1   --> Komşuları var ise
+		*/
+		if(visited[i] == false && dizi[root][i] == 1)
+		{
+			DFS(i, visited);
+		}
+	}
+}
+
+int main()
+{
+	for(int i=0; i<N; i++)
+	{
+		// visited[i] = false  --> başlangıçta hiçbir noktayı ziyaret edilmedi olarak işaretle
+		visited[i] = false;
+	}
+	
+	DFS(3, visited);
+	return 0;
+}
